@@ -1,12 +1,8 @@
-import torch
-from torchvision import datasets, transforms, models
-from torch import nn
-from torch import optim
 import json
-import matplotlib.pyplot as plt
-import torch.nn.functional as F
-from collections import OrderedDict
+
+import torch
 from PIL import Image
+from torchvision import datasets, transforms
 
 
 def transformations():
@@ -26,7 +22,7 @@ def transformations():
             'test_validation_transformations': test_transforms}
 
 
-def loaders(data_dir, train_dir, valid_dir, test_dir, transforms):
+def loaders(train_dir, valid_dir, test_dir, transforms):
     train_data = datasets.ImageFolder(train_dir, transform=transforms['train_transformations'])
     valid_data = datasets.ImageFolder(valid_dir, transform=transforms['test_validation_transformations'])
     test_data = datasets.ImageFolder(test_dir, transform=transforms['test_validation_transformations'])
@@ -42,23 +38,22 @@ def loaders(data_dir, train_dir, valid_dir, test_dir, transforms):
                                               shuffle=True)
     return {'train_loader': train_loader,
             'valid_loader': valid_loader,
-            'test_loader': valid_loader}
+            'test_loader': test_loader}
 
 
 def standard_folders_config():
-    standard = {'data_dir' : 'flowers',
-            'train_dir' : 'flowers/train',
-            'valid_dir' : 'flowers/valid',
-            'test_dir' :  'flowers/test'}
+    standard = {'data_dir': 'flowers',
+                'train_dir': 'flowers/train',
+                'valid_dir': 'flowers/valid',
+                'test_dir': 'flowers/test'}
     return standard
+
 
 def get_labels():
     with open('cat_to_name.json', 'r') as f:
         labels = json.load(f)
     return labels
 
-
-def combine_model_classifer():
 
 def get_device():
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
