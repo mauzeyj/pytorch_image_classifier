@@ -61,10 +61,12 @@ def load_classifier(path):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--image-location', required=True)
+    parser.add_argument('--topk', default=1, help='Number of top classes to show')
     args = parser.parse_args()
     args = args.__dict__
     classifier, tl_model, class_to_idx = load_classifier('checkpoint.pth')
     model = load_transfer_model(tl_model)
     model.classifier = classifier
-    predictions, labels, names = predict(args['image_location'], model)
-    print('The image was given a predicttion value of {}, and label of {}'.format(predictions[0], names[0]))
+    predictions, labels, names = predict(args['image_location'], model, class_to_idx, args['topk'])
+    for x in range(len(predictions)):
+        print('The image was given a predicttion value of {}, for label of {}'.format(predictions[x], names[x]))
