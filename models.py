@@ -15,7 +15,7 @@ class Network(nn.Module):
         super().__init__()
         self.hidden_layers = nn.ModuleList([nn.Linear(input, hidden_layers[0])])
         layer_sizes = zip(hidden_layers[:-1], hidden_layers[1:])
-        self.hidden_layers.extend([nn.Linear(h1, h2) for h1, h2 in layer_sizes])
+        self.hidden_layers.extend([nn.Linear(hidden1, hidden2) for hidden1, hidden2 in layer_sizes])
         self.output = nn.Linear(hidden_layers[-1], output)
         self.dropout = nn.Dropout(p=drop_out)
 
@@ -39,6 +39,7 @@ def load_transfer_model(version):
     :param version: version of vgg available from pytorch.models
     :return: pretrained vgg model
     """
+    version = version.lower()
     if version == 'vgg11':
         model = models.vgg11(pretrained = True)
     elif version == 'vgg13':

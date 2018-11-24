@@ -14,7 +14,6 @@ def transformations():
 
     test_transforms = transforms.Compose([transforms.Resize(256),
                                           transforms.CenterCrop(224),
-
                                           transforms.ToTensor(),
                                           transforms.Normalize([0.485, 0.456, 0.406],
                                                                [0.229, 0.224, 0.225])])
@@ -38,7 +37,8 @@ def loaders(train_dir, valid_dir, test_dir, transforms):
                                               shuffle=True)
     return {'train_loader': train_loader,
             'valid_loader': valid_loader,
-            'test_loader': test_loader}
+            'test_loader': test_loader,
+            'class_to_idx': train_data.class_to_idx}
 
 
 def standard_folders_config():

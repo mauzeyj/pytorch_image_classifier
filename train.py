@@ -1,12 +1,11 @@
 import argparse
 
 import torch
-from functions import get_device, standard_folders_config, transformations, loaders, validation
 from torch import nn
 from torch import optim
 
+from functions import get_device, standard_folders_config, transformations, loaders, validation
 from models import Network, load_transfer_model
-from functions import validation, transformations
 
 
 def train(hidden_layers, epochs, drop_out = 0.5, core_model ='vgg16'):
@@ -19,7 +18,7 @@ def train(hidden_layers, epochs, drop_out = 0.5, core_model ='vgg16'):
     :return: trained pytorch model
     """
     folders = standard_folders_config()
-    classifier = Network(25008, 102, hidden_layers, drop_out)
+    classifier = Network(25088, 102, hidden_layers, drop_out)
     model = load_transfer_model(core_model)
     model.classifier = classifier
     my_loaders = loaders(folders['train_dir'],
@@ -58,7 +57,7 @@ def train(hidden_layers, epochs, drop_out = 0.5, core_model ='vgg16'):
                       "Validation Accuracy: {:.3f}".format(accuracy / len(valid_loader)))  # change to valid loader
                 running_loss = 0
                 model.train()
-    return model
+    return model, my_loaders['class_to_idx']
 
 
 if __name__ == '__main__':
@@ -70,12 +69,13 @@ if __name__ == '__main__':
     parser.add_argument('--drop-out', default = .5, type = float)
     args = parser.parse_args()
     args = args.__dict__
-    model = train(args['hidden_layers'], args['epochs'], args['drop_out'], core_model=args['core_model'])
+    model, class_to_idx = train(args['hidden_layers'], args['epochs'], args['drop_out'], core_model=args['core_model'])
     model_checkpoint = {'transfer_learning_model':args['core_model'],
                    'input_size': 25088,
                    'output_size': 102,
                    'hidden_layers': args['hidden_layers'],
                    'drop_out':args['drop_out'],
+                        'class_to_idx': class_to_idx,
                    'state_dict':model.classifier.state_dict()}
     torch.save(model_checkpoint, 'checkpoint.pth')
 
