@@ -1,6 +1,5 @@
 import argparse
 import json
-
 import numpy as np
 import torch
 from PIL import Image
@@ -61,7 +60,7 @@ def load_classifier(path):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--image-location', required=True)
-    parser.add_argument('--topk', default=1, help='Number of top classes to show')
+    parser.add_argument('--topk', default=1, type=int, help='Number of top classes to show')
     args = parser.parse_args()
     args = args.__dict__
     classifier, tl_model, class_to_idx = load_classifier('checkpoint.pth')
